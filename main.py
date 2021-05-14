@@ -27,45 +27,45 @@ def train():
     forest.fit(x_train,y_train)
     y_pred=forest.predict(x_test)
 
-    print(accuracy_score(y_test, y_pred))  # 0.3
-    print(recall_score(y_test, y_pred,average='weighted'))  # 0.42
-    print(precision_score(y_test, y_pred,average='weighted'))  # 0.5
+    print(accuracy_score(y_test, y_pred))
+    print(recall_score(y_test, y_pred,average='weighted'))
+    print(precision_score(y_test, y_pred,average='weighted'))
     print(f1_score(y_test, y_pred,average='weighted'))
 
     sv=SVC(kernel='linear',C=1000)
     sv.fit(x_train,y_train)
     y_pred=sv.predict(x_test)
 
-    print(accuracy_score(y_test, y_pred))  # 0.3
-    print(recall_score(y_test, y_pred, average='weighted'))  # 0.42
-    print(precision_score(y_test, y_pred, average='weighted'))  # 0.5
+    print(accuracy_score(y_test, y_pred))
+    print(recall_score(y_test, y_pred, average='weighted'))
+    print(precision_score(y_test, y_pred, average='weighted'))
     print(f1_score(y_test, y_pred, average='weighted'))
 
     decision=DecisionTreeClassifier(random_state=164)
     decision.fit(x_train,y_train)
     y_pred=decision.predict(x_test)
 
-    print(accuracy_score(y_test, y_pred))  # 0.3
-    print(recall_score(y_test, y_pred, average='weighted'))  # 0.42
-    print(precision_score(y_test, y_pred, average='weighted'))  # 0.5
+    print(accuracy_score(y_test, y_pred))
+    print(recall_score(y_test, y_pred, average='weighted'))
+    print(precision_score(y_test, y_pred, average='weighted'))
     print(f1_score(y_test, y_pred, average='weighted'))
 
     lg=LogisticRegression()
     lg.fit(x_train,y_train)
     y_pred=lg.predict(x_test)
 
-    print(accuracy_score(y_test, y_pred))  # 0.3
-    print(recall_score(y_test, y_pred, average='weighted'))  # 0.42
-    print(precision_score(y_test, y_pred, average='weighted'))  # 0.5
+    print(accuracy_score(y_test, y_pred))
+    print(recall_score(y_test, y_pred, average='weighted'))
+    print(precision_score(y_test, y_pred, average='weighted'))
     print(f1_score(y_test, y_pred, average='weighted'))
 
     MLP=MLPClassifier(max_iter=200)
     MLP.fit(x_train,y_train)
     y_pred=MLP.predict(x_test)
 
-    print(accuracy_score(y_test, y_pred))  # 0.3
-    print(recall_score(y_test, y_pred, average='weighted'))  # 0.42
-    print(precision_score(y_test, y_pred, average='weighted'))  # 0.5
+    print(accuracy_score(y_test, y_pred))
+    print(recall_score(y_test, y_pred, average='weighted'))
+    print(precision_score(y_test, y_pred, average='weighted'))
     print(f1_score(y_test, y_pred, average='weighted'))
 
 if __name__ == '__main__':
