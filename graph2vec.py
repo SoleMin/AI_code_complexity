@@ -60,17 +60,22 @@ def dataset_reader(path):
     :return features: Features hash table.
     :return name: Name of the graph.
     """
-    print(path)
+
     name = path.strip(".java").split("/")[-1]
     # data = json.load(open(path))
-    graph = nx.from_edgelist(get_graph(path))
+    data=get_graph(path)
+    graph = nx.from_edgelist(data['edges'])
 
-    # if "features" in data.keys():
-    #     features = data["features"]
-
-    features = nx.degree(graph)
-
-    features = {int(k): v for k, v in features}
+    if "features" in data.keys():
+        features = data["features"]
+    else:
+        features = nx.degree(graph)
+    print(features)
+    features = {int(k): v for k, v in features.items()}
+    # try:
+    #     features = {int(k): v for k, v in features}
+    # except:
+    #     print(features)
     return graph, features, name
 
 def feature_extractor(path, rounds):
