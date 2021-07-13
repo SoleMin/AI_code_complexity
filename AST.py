@@ -1,19 +1,21 @@
 import javalang
+import pandas as pd
+import numpy as np
 
 def state_counter(typelist):
     num_state = 0
-    num_state+=typelist.count(javalang.tree.IfStatement)
-    num_state+=typelist.count(javalang.tree.WhileStatement)
-    num_state+=typelist.count(javalang.tree.DoStatement)
-    num_state+=typelist.count(javalang.tree.ForStatement)
-    num_state+=typelist.count(javalang.tree.AssertStatement)
-    num_state+=typelist.count(javalang.tree.BreakStatement)
-    num_state+=typelist.count(javalang.tree.ContinueStatement)
-    num_state+=typelist.count(javalang.tree.ReturnStatement)
-    num_state+=typelist.count(javalang.tree.ThrowStatement)
-    num_state+=typelist.count(javalang.tree.SynchronizedStatement)
-    num_state+=typelist.count(javalang.tree.TryStatement)
-    num_state+=typelist.count(javalang.tree.SwitchStatement)
+    num_state += typelist.count(javalang.tree.IfStatement)
+    num_state += typelist.count(javalang.tree.WhileStatement)
+    num_state += typelist.count(javalang.tree.DoStatement)
+    num_state += typelist.count(javalang.tree.ForStatement)
+    num_state += typelist.count(javalang.tree.AssertStatement)
+    num_state += typelist.count(javalang.tree.BreakStatement)
+    num_state += typelist.count(javalang.tree.ContinueStatement)
+    num_state += typelist.count(javalang.tree.ReturnStatement)
+    num_state += typelist.count(javalang.tree.ThrowStatement)
+    num_state += typelist.count(javalang.tree.SynchronizedStatement)
+    num_state += typelist.count(javalang.tree.TryStatement)
+    num_state += typelist.count(javalang.tree.SwitchStatement)
     num_state += typelist.count(javalang.tree.BlockStatement)
 
     return num_state
@@ -33,6 +35,7 @@ def feature_Extractor(source_file):
     num_recursive=0
     for path,node in tree:
         # print(node)
+        print(node)
         if type(node)==javalang.tree.MethodDeclaration:
             temp_name=node.name
             if node.name in str(node).replace('name='+temp_name,''):
@@ -68,4 +71,100 @@ def feature_Extractor(source_file):
 
     return [num_if,num_switch,num_loof,num_break,num_Priority,num_sort,num_hash_map,num_hash_set,num_recursive,num_nasted_loop,num_vari,num_method,num_state]
 
-feature_Extractor('140.java')
+def get_graph(source_file):
+
+    f = open(source_file)
+    source = f.read()
+    f.close()
+    print(source_file)
+    tree = javalang.parse.parse(source)
+    graph_list=[]
+    node_dict={}
+    temp_list=[]
+    root=tree.__iter__().__next__()[1]
+    # print(root)
+    # print(tree.__iter__().__next__()[1])
+    for i,(path,node) in enumerate(tree):
+        node_dict[node]=i
+    s_num=i
+    # for path, node in tree:
+    #
+    #     if type(node)==javalang.tree.SwitchStatement:
+    #         print(node.control)
+    #         print(type(node),node.attrs)
+
+    # graph_list.append()
+    # print(node_dict)
+    # print()
+    graph_list=visit(root,graph_list,node_dict,s_num)
+
+    return graph_list
+    # print(graph_list)
+def visit(node,graph_list,node_dict,s_num):
+
+    if node != None and type(node) != str and type(node) != bool and type(node) != set :
+        attr_list = node.attrs
+        for i in attr_list:
+            # print(type(getattr(node, i)))
+            # print(getattr(node, i),i)
+
+            if type(getattr(node, i)) == list:
+                for item in getattr(node, i):
+                    if type(item)== list:
+                        print(item)
+                    elif (item != None):
+                        if node_dict.get(item) == None:
+                            graph_list.append((node_dict.get(node),s_num))
+                            s_num+=1
+                        else:
+                            graph_list.append((node_dict.get(node), node_dict.get(item)))
+                            visit(item, graph_list, node_dict,s_num)
+
+            else:
+
+                # print(node)
+                if (getattr(node, i) != None) and type(getattr(node, i)) != set:
+                    if node_dict.get(getattr(node, i)) == None:
+                        graph_list.append((node_dict.get(node), s_num))
+                        s_num += 1
+                    else:
+                        graph_list.append((node_dict.get(node),node_dict.get(getattr(node, i))))
+                        visit(getattr(node, i),graph_list,node_dict,s_num)
+
+    return graph_list
+# def visit_list(node,graph_list,node_dict,s_num):
+#
+#     if type(getattr(node, i)) == list:
+#         for item in getattr(node, i):
+#             if type(item) == list:
+#                 print(item)
+#             elif (item != None):
+#                 if node_dict.get(item) == None:
+#                     graph_list.append((node_dict.get(node), s_num))
+#                     s_num += 1
+#                 else:
+#                     graph_list.append((node_dict.get(node), node_dict.get(item)))
+#                     visit(item, graph_list, node_dict, s_num)
+#
+def analysis(source_file):
+    PATH = 'data/CodeDataset/'
+    f = open(PATH + source_file)
+    source = f.read()
+    f.close()
+    tree = javalang.parse.parse(source)
+
+    for path, node in tree:
+        if type(node)==javalang.tree.SwitchStatement:
+            # print(node)
+            # print(len(node.statements))
+            for i in node.attrs:
+                print(i)
+            for i in node.attrs:
+                print(i,": ",getattr(node,i))
+            print()
+            # print(node.type)
+            # print(len(node.declarators)
+            # print(node.modifiers)
+            # print(node.annotations)
+
+# get_graph('data/CodeDataset/'+'51.java')
