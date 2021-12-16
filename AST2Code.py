@@ -51,7 +51,7 @@ class AST2Code_module():
         'InferredFormalParameter':self.InferredFormalParameter2Code
         }
         self.current_method_stack=[]
-    def prepiar_convert(self,tree):
+    def prepare_convert(self,tree):
         self.method_list=dict()
         for _,node in tree:
             if type(node).__name__=='MethodDeclaration':
@@ -76,7 +76,7 @@ class AST2Code_module():
                 
     def AST2Code(self,root):
         code=''
-        self.prepiar_convert(root)
+        self.prepare_convert(root)
         if root.package:
             code+= 'package '+root.package.name+';\n'
         for import_item in root.imports:
